@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: product
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shopping
+    username: postgres
+    password: ${db.password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  secret: ${jwt.sec}
+  expiry:
+    minutes: 90
