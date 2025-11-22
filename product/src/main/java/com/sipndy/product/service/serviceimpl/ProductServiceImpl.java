@@ -3,6 +3,7 @@ package com.sipndy.product.service.serviceimpl;
 import com.sipndy.product.entity.Product;
 import com.sipndy.product.repo.ProductRepo;
 import com.sipndy.product.service.ProductService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +41,13 @@ public class ProductServiceImpl implements ProductService {
         Supplier<Exception> noProduct = () -> new IllegalArgumentException( "No Such Category");
         List<Product> products = product.orElseThrow(noProduct);
         return products.stream().map(Product::getProductName).collect(Collectors.toList());
+    }
+
+
+    @Transactional
+    @Override
+    public boolean deleteAllProduct(String username) throws Exception {
+        productRepo.deleteByCreatedBy(username);
+        return true;
     }
 }

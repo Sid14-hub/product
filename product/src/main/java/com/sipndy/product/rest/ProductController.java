@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,9 +21,9 @@ public class ProductController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/add")
     public ResponseEntity addProduct(@RequestBody Product product){
-
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        product.setCreatedBy(userName);
         productService.addProduct(product);
-
         return new ResponseEntity<>("Products saved successfully",HttpStatusCode.valueOf(200));
     }
 
@@ -56,5 +57,18 @@ public class ProductController {
             return new ResponseEntity<>(e.getMessage(),HttpStatusCode.valueOf(500));
         }
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/deleteProducts")
+    public ResponseEntity deleteProducts(){
+        try {
+            String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+            boolean product =  productService.deleteAllProduct(userName);
+            return new ResponseEntity<>(product,HttpStatusCode.valueOf(200));
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatusCode.valueOf(500));
+        }
+    }
+
 
 }
