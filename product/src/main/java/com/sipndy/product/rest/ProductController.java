@@ -38,7 +38,7 @@ public class ProductController {
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/product")
-    public ResponseEntity getProduct(@RequestParam Long id){
+    public ResponseEntity getProduct(@RequestParam String id){
         try {
            Product product =  productService.getProduct(id);
            return new ResponseEntity<>(product.getProductName(),HttpStatusCode.valueOf(200));

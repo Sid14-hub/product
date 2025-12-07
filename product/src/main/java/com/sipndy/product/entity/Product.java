@@ -1,19 +1,19 @@
 package com.sipndy.product.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Document(collection = "product")
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    private String productId;
     @NonNull
     private String productName;
     @NonNull
@@ -21,6 +21,5 @@ public class Product {
     @NonNull
     private String productCategory;
     @NonNull
-    @Column(name = "created_by")
     private String createdBy;
 }

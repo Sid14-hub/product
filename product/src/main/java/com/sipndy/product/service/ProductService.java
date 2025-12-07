@@ -10,7 +10,7 @@ public interface ProductService {
 
     public void addProducts(List<Product> product);
 
-    public Product getProduct(Long productId) throws Exception;
+    public Product getProduct(String productId) throws Exception;
 
     public List<String> getProducts(String productCategory) throws Exception;
 
