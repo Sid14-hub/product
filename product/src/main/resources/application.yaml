@@ -11,7 +11,3 @@ jwt:
   secret: ${jwt.sec}
   expiry:
     minutes: 90
-
-mongodb:
-  username: ${mongo.user}
-  password: ${mongo.pass}
