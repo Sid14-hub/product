@@ -1,17 +1,17 @@
 spring:
   application:
     name: product
-  datasource:
-    url: jdbc:postgresql://localhost:5432/shopping
-    username: postgres
-    password: ${db.password}
-    driver-class-name: org.postgresql.Driver
+  data:
+    mongodb:
+      uri: mongodb+srv://${mongodb.username}:${mongodb.password}@shopping.55bowbl.mongodb.net/Shopping
   jpa:
-    hibernate:
-      ddl-auto: update
     show-sql: true
 
 jwt:
   secret: ${jwt.sec}
   expiry:
     minutes: 90
+
+mongodb:
+  username: ${mongo.user}
+  password: ${mongo.pass}
