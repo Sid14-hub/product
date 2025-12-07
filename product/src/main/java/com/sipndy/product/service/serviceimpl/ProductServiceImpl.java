@@ -1,10 +1,18 @@
 package com.sipndy.product.service.serviceimpl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sipndy.product.entity.ClothingProduct;
+import com.sipndy.product.entity.ElectronicProduct;
+import com.sipndy.product.entity.GroceryProduct;
 import com.sipndy.product.entity.Product;
+import com.sipndy.product.enums.ProductCategory;
 import com.sipndy.product.repo.ProductRepo;
 import com.sipndy.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +29,15 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepo productRepo;
 
     @Override
-    public void addProduct(Product product) {
+    public void addProduct(JsonNode product) {
         try {
-            log.info("Saving a product with id {}", product.getProductId());
-            productRepo.save(product);
-            log.info("Saved product");
+            Product productObj = mapProducts(product);
+            if(productObj!=null) {
+                productRepo.save(productObj);
+                log.info("Saved product");
+            }else {
+                log.info("Nothing Saved");
+            }
         } catch (Exception e){
             log.info(e.getMessage());
         }
@@ -62,5 +74,27 @@ public class ProductServiceImpl implements ProductService {
             log.info(e.getMessage());
         }
         return false;
+    }
+
+    private Product mapProducts(JsonNode product){
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        ObjectNode node = (ObjectNode) product;
+        node.put("createdBy",userName);
+        ObjectMapper mapper = new ObjectMapper();
+        ProductCategory pc = ProductCategory.valueOf(node.get("productCategory").asText());
+        Product prod=null;
+        switch (pc){
+            case ELECTRONICS:
+                prod = mapper.convertValue(node,ElectronicProduct.class);
+                log.info("Processing ELECTRONICS");
+            case CLOTHING:
+                prod = mapper.convertValue(node,ClothingProduct.class);
+                log.info("Processing cloth");
+            case GROCERY:
+                prod = mapper.convertValue(node, GroceryProduct.class);
+                log.info("Processing Grocery");
+            default:
+                return prod;
+        }
     }
 }

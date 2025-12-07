@@ -1,5 +1,6 @@
 package com.sipndy.product.entity;
 
+import com.sipndy.product.enums.ProductCategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class Product {
     @NonNull
     private double productPrice;
     @NonNull
-    private String productCategory;
+    private ProductCategory productCategory;
     @NonNull
     private String createdBy;
 }

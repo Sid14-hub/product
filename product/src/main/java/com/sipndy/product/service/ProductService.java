@@ -1,12 +1,13 @@
 package com.sipndy.product.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.sipndy.product.entity.Product;
 
 import java.util.List;
 
 public interface ProductService {
 
-    public void addProduct(Product product);
+    public void addProduct(JsonNode product);
 
     public void addProducts(List<Product> product);
 

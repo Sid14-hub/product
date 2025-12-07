@@ -1,5 +1,6 @@
 package com.sipndy.product.rest;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.sipndy.product.entity.Product;
 import com.sipndy.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,7 @@ public class ProductController {
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/add")
-    public ResponseEntity addProduct(@RequestBody Product product){
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        product.setCreatedBy(userName);
+    public ResponseEntity addProduct(@RequestBody JsonNode product){
         productService.addProduct(product);
         return new ResponseEntity<>("Products saved successfully",HttpStatusCode.valueOf(200));
     }
