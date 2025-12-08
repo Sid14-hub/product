@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepo productRepo;
+    private final ObjectMapper objectMapper;
 
     @Override
     public void addProduct(JsonNode product) {
@@ -79,22 +80,22 @@ public class ProductServiceImpl implements ProductService {
     private Product mapProducts(JsonNode product){
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         ObjectNode node = (ObjectNode) product;
-        node.put("createdBy",userName);
-        ObjectMapper mapper = new ObjectMapper();
-        ProductCategory pc = ProductCategory.valueOf(node.get("productCategory").asText());
-        Product prod=null;
-        switch (pc){
+        node.put("createdBy", userName);
+        ProductCategory pc = ProductCategory.valueOf(node.get("productCategory").asText().toUpperCase());
+        Product prod;
+        switch (pc) {
             case ELECTRONICS:
-                prod = mapper.convertValue(node,ElectronicProduct.class);
-                log.info("Processing ELECTRONICS");
+                prod = objectMapper.convertValue(node, ElectronicProduct.class);
+                break;
             case CLOTHING:
-                prod = mapper.convertValue(node,ClothingProduct.class);
-                log.info("Processing cloth");
+                prod = objectMapper.convertValue(node, ClothingProduct.class);
+                break;
             case GROCERY:
-                prod = mapper.convertValue(node, GroceryProduct.class);
-                log.info("Processing Grocery");
+                prod = objectMapper.convertValue(node, GroceryProduct.class);
+                break;
             default:
-                return prod;
+                throw new IllegalArgumentException("Unsupported product category: " + pc);
         }
+        return prod;
     }
 }
