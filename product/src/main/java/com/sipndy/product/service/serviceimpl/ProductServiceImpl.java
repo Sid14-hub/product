@@ -1,11 +1,7 @@
 package com.sipndy.product.service.serviceimpl;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.sipndy.product.entity.ClothingProduct;
-import com.sipndy.product.entity.ElectronicProduct;
-import com.sipndy.product.entity.GroceryProduct;
 import com.sipndy.product.entity.Product;
 import com.sipndy.product.enums.ProductCategory;
 import com.sipndy.product.patterns.factory.ProductFactory;

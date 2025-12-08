@@ -7,7 +7,6 @@ import com.sipndy.product.mapper.ClothingProductMapper;
 import com.sipndy.product.mapper.ElectronicProductMapper;
 import com.sipndy.product.mapper.GroceryProductMapper;
 import com.sipndy.product.patterns.strategy.ProductMapperStrategy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.EnumMap;
@@ -18,7 +17,6 @@ public class ProductFactory {
 
     private final Map<ProductCategory, ProductMapperStrategy> strategies = new EnumMap<>(ProductCategory.class);
 
-    @Autowired
     public ProductFactory(
             ElectronicProductMapper electronicMapper,
             ClothingProductMapper clothingMapper,
