@@ -8,6 +8,7 @@ import com.sipndy.product.entity.ElectronicProduct;
 import com.sipndy.product.entity.GroceryProduct;
 import com.sipndy.product.entity.Product;
 import com.sipndy.product.enums.ProductCategory;
+import com.sipndy.product.patterns.factory.ProductFactory;
 import com.sipndy.product.repo.ProductRepo;
 import com.sipndy.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -27,21 +28,15 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepo productRepo;
-    private final ObjectMapper objectMapper;
+    private final ProductFactory productFactory;
 
     @Override
     public void addProduct(JsonNode product) {
-        try {
-            Product productObj = mapProducts(product);
-            if(productObj!=null) {
-                productRepo.save(productObj);
-                log.info("Saved product");
-            }else {
-                log.info("Nothing Saved");
-            }
-        } catch (Exception e){
-            log.info(e.getMessage());
-        }
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        ObjectNode node = (ObjectNode) product;
+        node.put("createdBy", userName);
+        ProductCategory category = ProductCategory.valueOf(node.get("productCategory").asText().toUpperCase());
+        productRepo.save(productFactory.map(node, category));
     }
 
     @Override
@@ -75,27 +70,5 @@ public class ProductServiceImpl implements ProductService {
             log.info(e.getMessage());
         }
         return false;
-    }
-
-    private Product mapProducts(JsonNode product){
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        ObjectNode node = (ObjectNode) product;
-        node.put("createdBy", userName);
-        ProductCategory pc = ProductCategory.valueOf(node.get("productCategory").asText().toUpperCase());
-        Product prod;
-        switch (pc) {
-            case ELECTRONICS:
-                prod = objectMapper.convertValue(node, ElectronicProduct.class);
-                break;
-            case CLOTHING:
-                prod = objectMapper.convertValue(node, ClothingProduct.class);
-                break;
-            case GROCERY:
-                prod = objectMapper.convertValue(node, GroceryProduct.class);
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported product category: " + pc);
-        }
-        return prod;
     }
 }
