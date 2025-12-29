@@ -69,5 +69,21 @@ public class ProductController {
         }
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/addToCart")
+    public ResponseEntity addToCart(@RequestBody JsonNode product){
+        productService.addToCart(product);
+        return new ResponseEntity<>("Products saved successfully",HttpStatusCode.valueOf(200));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/getCart")
+    public ResponseEntity<?> getCart(){
+        try{
+            return new ResponseEntity<>(productService.findAllCart(),HttpStatusCode.valueOf(200));
+        }catch (Exception e){
+            return new ResponseEntity<>("Failed to get the value" + e.getMessage(),HttpStatusCode.valueOf(500));
+        }
+    }
 
 }

@@ -16,4 +16,8 @@ public interface ProductService {
     public List<String> getProducts(String productCategory) throws Exception;
 
     public boolean deleteAllProduct(String username) throws Exception;
+
+    public void addToCart(JsonNode product);
+
+    public List<JsonNode> findAllCart();
 }
